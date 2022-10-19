@@ -24,6 +24,13 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
+app.get("/sync", (req, res) => {
+  const models = require("./models");
+  models.sequelize.sync().then(() => {
+    res.send("Sync database successfully");
+  });
+});
+
 app.get("/:page", (req, res) => {
   const page = req.params.page;
 
