@@ -15,6 +15,18 @@ const controller = {
         .catch((error) => reject(new Error(error)));
     });
   },
+
+  getAll: () => {
+    return new Promise((resolve, reject) => {
+      Product.findAll({
+        attributes: ["id", "name", "imagepath", "price"],
+        include: [{ model: models.Category }],
+        order: [["overallReview", "DESC"]],
+      })
+        .then((data) => resolve(data))
+        .catch((error) => reject(new Error(error)));
+    });
+  },
 };
 
 module.exports = controller;

@@ -9,7 +9,6 @@ router.get("/", (req, res, next) => {
     .getAll()
     .then((data) => {
       res.locals.categories = data;
-
       return productController.getTrendingProducts();
     })
     .then((data) => {
