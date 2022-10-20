@@ -1,37 +1,24 @@
-"use strict";
-const { Model } = require("sequelize");
+'use strict';
 module.exports = (sequelize, DataTypes) => {
-  class Product extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
-      Product.belongsTo(models.Category, { foreignKey: "categoryId" });
-      Product.belongsTo(models.Brand, { foreignKey: "brandId" });
-      Product.hasMany(models.ProductColor, { foreignKey: "productId" });
-      Product.hasMany(models.ProductSpecification, { foreignKey: "productId" });
-      Product.hasMany(models.Comment, { foreignKey: "commentId" });
-      Product.hasMany(models.Review, { foreignKey: "productId" });
-    }
-    ß;
-  }
-  Product.init(
-    {
-      name: DataTypes.STRING,
-      price: DataTypes.DECIMAL,
-      imagepath: DataTypes.TEXT,
-      thumbnailPath: DataTypes.TEXT,
-      availability: DataTypes.BOOLEAN,
-      summary: DataTypes.TEXT,
-      description: DataTypes.TEXT,
-    },
-    {
-      sequelize,
-      modelName: "Product",
-    }
-  );
-  return Product;
+    const Product = sequelize.define('Product', {
+        name: DataTypes.STRING,
+        price: DataTypes.DECIMAL,
+        summary: DataTypes.TEXT,
+        description: DataTypes.TEXT,
+        availability: DataTypes.BOOLEAN,
+        imagepath: DataTypes.TEXT,
+        thumbnailPath: DataTypes.TEXT,
+        overallReview: DataTypes.DOUBLE,
+        reviewCount: DataTypes.INTEGER
+    }, {});
+    Product.associate = function(models) {
+        // associations can be defined here
+        Product.belongsTo(models.Brand, { foreignKey: 'brandId' });
+        Product.belongsTo(models.Category, { foreignKey: 'categoryId' });
+        Product.hasMany(models.ProductColor, { foreignKey: 'productId' });
+        Product.hasMany(models.ProductSpecification, { foreignKey: 'productId' });
+        Product.hasMany(models.Comment, { foreignKey: 'productId' });
+        Product.hasMany(models.Review, { foreignKey: 'productId' });
+    };
+    return Product;
 };

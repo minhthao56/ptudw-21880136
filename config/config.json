@@ -3,21 +3,27 @@
     "username": "postgres",
     "password": 119955,
     "database": "aromadb",
-    "host": "127.0.0.1",
+    "host": "localhost",
     "dialect": "postgres"
   },
   "test": {
-    "username": "root",
-    "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "username": "postgres",
+    "password": "postgres",
+    "database": "aromadb",
+    "host": "localhost",
+    "dialect": "postgres"
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "username": "xmyyvidjftjnfa",
+    "password": "602111a42160673ad0f953cd75d0a5ecb343a62de9a0760ff92041132c93ee2d",
+    "database": "dd72995nqofdlj",
+    "host": "ec2-44-199-9-102.compute-1.amazonaws.com",
+    "dialect": "postgres",
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
   }
 }

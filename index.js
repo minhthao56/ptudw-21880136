@@ -12,6 +12,9 @@ const hbs = expressHandlebars.create({
   defaultLayout: "layout",
   layoutsDir: __dirname + "/views/layouts",
   partialsDir: __dirname + "/views/partials",
+  runtimeOptions: {
+    allowProtoPropertiesByDefault: true,
+  },
 });
 
 app.engine("hbs", hbs.engine);
@@ -20,9 +23,9 @@ app.set("port", PORT);
 
 app.set("view engine", "hbs");
 
-app.get("/", (req, res) => {
-  res.render("index");
-});
+app.use("/", require("./routers/indexRouter"));
+
+app.use("/products", require("./routers/productRouter"));
 
 app.get("/sync", (req, res) => {
   const models = require("./models");
