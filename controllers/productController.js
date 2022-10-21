@@ -27,6 +27,17 @@ const controller = {
         .catch((error) => reject(new Error(error)));
     });
   },
+
+  getProductById: (id) => {
+    return new Promise((resolve, reject) => {
+      Product.findOne({
+        where: { id },
+        include: [{ model: models.Category }],
+      })
+        .then((data) => resolve(data))
+        .catch((error) => reject(new Error(error)));
+    });
+  },
 };
 
 module.exports = controller;

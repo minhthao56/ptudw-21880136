@@ -1,5 +1,10 @@
 const express = require("express");
 const expressHandlebars = require("express-handlebars");
+const {
+  calculateStartIndex,
+  createStart,
+  createStartInComment,
+} = require("./controllers/helper");
 
 const app = express();
 
@@ -14,6 +19,11 @@ const hbs = expressHandlebars.create({
   partialsDir: __dirname + "/views/partials",
   runtimeOptions: {
     allowProtoPropertiesByDefault: true,
+  },
+  helpers: {
+    calculateStartIndex,
+    createStart,
+    createStartInComment,
   },
 });
 
