@@ -1,3 +1,5 @@
+
+<script src="/vendors/nouislider/nouislider.min.js"></script>
 {{> banner}}
 <!-- ================ end banner area ================= -->
 
@@ -17,9 +19,13 @@
                     <input
                       class="pixel-radio"
                       type="radio"
-                      id="men"
-                      name="brand"
-                    /><label for="men">{{name}}<span> ({{Products.length}})</span></label>
+                      id="category{{id}}"
+                      name="category"
+                    
+                    />
+                    <label for="category{{id}}" onclick="setParams('category',{{id}}, true)">
+                      {{name}}<span> ({{Products.length}})</span>
+                    </label>
                   </li>
                   {{/each}}
                 </ul>
@@ -38,9 +44,13 @@
                   <input
                     class="pixel-radio"
                     type="radio"
-                    id="apple"
+                    id="brand{{id}}"
                     name="brand"
-                  /><label for="apple">{{name}}<span>({{Products.length}})</span></label>
+                  />
+                  <label for="brand{{id}}" onclick="setParams('brand', {{id}})">
+                    {{name}}
+                    <span>({{Products.length}})</span>
+                  </label>
                 </li>
                 {{/each}}
               </ul>
@@ -51,14 +61,20 @@
             <form action="#">
               <ul>
                 {{#each colors}}
+                {{#if ProductColors.length}}
                 <li class="filter-list">
                   <input
                     class="pixel-radio"
                     type="radio"
-                    id="black"
+                    id="color{{id}}"
                     name="color"
-                  /><label for="black">{{name}}<span>({{ProductColors.length}})</span></label>
+                  />
+                  <label for="color{{id}}" onclick="setParams('color', {{id}})">
+                    {{name}}
+                    <span>({{ProductColors.length}})</span>
+                  </label>
                 </li>
+                {{/if}}
                 {{/each}}
               </ul>
             </form>
@@ -83,26 +99,28 @@
         <!-- Start Filter Bar -->
         <div class="filter-bar d-flex flex-wrap align-items-center">
           <div class="sorting">
-            <select>
-              <option value="1">Default sorting</option>
-              <option value="1">Default sorting</option>
-              <option value="1">Default sorting</option>
+            <select onchange='setParams("sort", this.value)' id="sort-dropdown">
+              <option value="name">Default sorting by name</option>
+              <option value="price">Sorting by price low to high</option>
+              <option value="overallReview">Sorting by reviews from high to low</option>
             </select>
           </div>
           <div class="sorting mr-auto">
-            <select>
-              <option value="1">Show 12</option>
-              <option value="1">Show 12</option>
-              <option value="1">Show 12</option>
+            <select onchange='setParams("limit", this.value)' id="limit-dropdown">
+              <option value="9">Show 9</option>
+              <option value="18">Show 18</option>
+              <option value="36">Show 36</option>
             </select>
           </div>
           <div>
-            <div class="input-group filter-bar-search">
-              <input type="text" placeholder="Search" />
+            <form action="/products?page=1&limit=9" method="get" onsubmit='onSubmit(event)'>
+              <div class="input-group filter-bar-search">
+              <input type="text" name="search" placeholder="Search" />
               <div class="input-group-append">
-                <button type="button"><i class="ti-search"></i></button>
+                <button type="submit"><i class="ti-search"></i></button>
               </div>
             </div>
+            </form>
           </div>
         </div>
         <!-- End Filter Bar -->
@@ -138,6 +156,10 @@
             {{/each}}
           </div>
         </section>
+          <nav>
+            {{{createPagination pagination}}}
+          </nav>
+        
         <!-- End Best Seller -->
       </div>
     </div>
@@ -301,3 +323,86 @@
     </div>
   </div>
 </section>
+
+
+<script>
+  const urlParams = new URLSearchParams(location.search)
+  const maxMinKeys = ["min", "max"];
+  const keysDeleted = ["category","brand", "color", "sort", "search"].concat(maxMinKeys)
+  
+  function setSortAndLimitValue (){
+      const valueSort = urlParams.get("sort")
+      const valueLimit = urlParams.get("limit")
+
+      if(valueSort){
+        $('#sort-dropdown').val(valueSort)
+      }else{
+         $('#sort-dropdown').val("name")
+      }
+
+      if(valueLimit){
+         $('#limit-dropdown').val(valueLimit)
+      }else{
+         $('#limit-dropdown').val("9")
+      }
+
+  }
+
+
+  $(document).ready(function(){
+    for(key of keysDeleted){
+          if(urlParams.has(key)){
+            const value = urlParams.get(key);
+            $(`#${key}${value}`).prop("checked",true);
+          }
+    }
+    setSortAndLimitValue()
+
+    $(".pagination").addClass("justify-content-center")
+    $(".pagination li").addClass("page-item")
+    $(".pagination li a").addClass("page-link")
+    
+    const pageSave = urlParams.get("page")
+    $(".pagination li a").each((_,element)=>{
+        const page = $(element).attr("href").split("=")[1]
+       urlParams.set("page", page)
+        const href = `products?${urlParams.toString()}`
+      $(element).attr("href", href)
+      })
+
+      urlParams.set("page", pageSave)
+  
+  })
+
+    $(".pagination li a").click((eventObject)=>{
+      
+      console.log({eventObject:eventObject.target.href })
+        //const page = $(element).attr("href").split("=")[1]
+        //urlParams.set("page", page)
+        //const href = `products?${urlParams.toString()}`
+       // $(element).attr("href", href)
+      })
+    
+
+
+  function addParams(key, id){
+    urlParams.set(key,id)
+    const url = `products?${urlParams.toString()}`
+    location.href = url
+  }
+
+  function setParams(key, id, isReset = false){
+      if(isReset){
+        for(value of keysDeleted ){
+          if(urlParams.has(value))
+            urlParams.delete(value);
+        }
+        urlParams.set("page",1)
+        urlParams.set("limit",9)
+
+        addParams(key,id)
+      }else{
+        addParams(key,id)
+      }
+  }
+</script>

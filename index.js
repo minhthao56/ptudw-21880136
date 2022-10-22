@@ -1,5 +1,7 @@
 const express = require("express");
 const expressHandlebars = require("express-handlebars");
+const { createPagination } = require("express-handlebars-paginate");
+
 const {
   calculateStartIndex,
   createStart,
@@ -24,6 +26,7 @@ const hbs = expressHandlebars.create({
     calculateStartIndex,
     createStart,
     createStartInComment,
+    createPagination,
   },
 });
 

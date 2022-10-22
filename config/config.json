@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "postgres",
-    "password": 119955,
+    "password": "119955",
     "database": "aromadb",
     "host": "localhost",
     "dialect": "postgres"
