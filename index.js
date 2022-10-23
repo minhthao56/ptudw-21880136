@@ -1,7 +1,11 @@
 const express = require("express");
 const expressHandlebars = require("express-handlebars");
 const { createPagination } = require("express-handlebars-paginate");
+const bodyParser = require("body-parser");
+const expressSession = require("express-session");
+const cookieParser = require("cookie-parser");
 
+const Cart = require("./controllers/cartController");
 const {
   calculateStartIndex,
   createStart,
@@ -36,9 +40,35 @@ app.set("port", PORT);
 
 app.set("view engine", "hbs");
 
+//bodyParser
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+//expressSession
+app.use(
+  expressSession({
+    cookie: { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 },
+    secret: "123123",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+//cookie parse
+app.use(cookieParser());
+
+app.use((req, res, next) => {
+  const cart = new Cart(req.session.cart || {});
+  req.session.cart = cart;
+  res.locals.totalQuantity = cart.totalQuantity;
+  next();
+});
+
 app.use("/", require("./routers/indexRouter"));
 
 app.use("/products", require("./routers/productRouter"));
+
+app.use("/cart", require("./routers/cartRouter"));
 
 app.get("/sync", (req, res) => {
   const models = require("./models");
@@ -54,10 +84,10 @@ app.get("/:page", (req, res) => {
     blog: "Our Blog",
     contact: "Contact Us",
     category: "Shop Category",
-    "single-product": "Shop Single",
+    // "single-product": "Shop Single",
     checkout: "SProduct Checkout",
     confirmation: "Order Confirmation",
-    cart: "Shopping Cart",
+    // cart: "Shopping Cart",
     "single-blog": "Blog Details",
     login: "Login / Register",
     register: "Register",
