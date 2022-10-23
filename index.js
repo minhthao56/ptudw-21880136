@@ -70,6 +70,8 @@ app.use("/products", require("./routers/productRouter"));
 
 app.use("/cart", require("./routers/cartRouter"));
 
+app.use("/comments", require("./routers/commentRouter"));
+
 app.get("/sync", (req, res) => {
   const models = require("./models");
   models.sequelize.sync().then(() => {

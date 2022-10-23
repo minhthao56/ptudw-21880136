@@ -177,7 +177,7 @@
                   <div class="media-body">
                     <h4>{{User.fullname}}</h4>
                     <h5>{{createdAt}}</h5>
-                    <a class="reply_btn" href="#">Reply</a>
+                    <a class="reply_btn" style="cursor: pointer;" onclick="showReply('{{id}}', '{{User.fullname}}')">Reply</a>
                   </div>
                 </div>
                 <p>
@@ -192,8 +192,8 @@
                       </div>
                       <div class="media-body">
                         <h4>{{User.fullname}}</h4>
-                        <h5>{{CreatedAt}}</h5>
-                        <a class="reply_btn" href="#">Reply</a>
+                        <h5>{{createdAt}}</h5>
+                        <a class="reply_btn" style="cursor: pointer;" onclick="showReply('{{../id}}', '{{User.fullname}}')">Reply</a>
                       </div>
                     </div>
                     <p>
@@ -208,63 +208,32 @@
           <div class="col-lg-6">
             <div class="review_box">
               <h4>Post a comment</h4>
-              <form
-                class="row contact_form"
-                action="contact_process.php"
-                method="post"
-                id="contactForm"
-                novalidate="novalidate"
-              >
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="name"
-                      name="name"
-                      placeholder="Your Full name"
-                    />
-                  </div>
+                <form action="/comments" class="form-contact form-review mt-3" method="post">
+                <input type="hidden" value="{{id}}" name="productId">
+                <input type="hidden" value="" name="parentCommentId" id="parentCommentId">
+                <div style="display: flex; justify-content: start; align-items: center;">
+                  <span aria-hidden="true" style="cursor: pointer; margin-right: 16px;" id="btn-close-reply" onclick="closeReply()">&times;</sp>
+                  <span id="reply"></span>
                 </div>
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <input
-                      type="email"
-                      class="form-control"
-                      id="email"
-                      name="email"
-                      placeholder="Email Address"
-                    />
-                  </div>
+                <div class="form-group">
+                  <textarea
+                    class="form-control different-control w-100"
+                    name="message"
+                    id="textarea"
+                    cols="30"
+                    rows="5"
+                    placeholder="Enter Message"
+                  ></textarea>
                 </div>
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="number"
-                      name="number"
-                      placeholder="Phone Number"
-                    />
-                  </div>
-                </div>
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <textarea
-                      class="form-control"
-                      name="message"
-                      id="message"
-                      rows="1"
-                      placeholder="Message"
-                    ></textarea>
-                  </div>
-                </div>
-                <div class="col-md-12 text-right">
-                  <button type="submit" value="submit" class="btn primary-btn">
+                <div class="form-group text-center text-md-right mt-3">
+                  <button
+                    type="submit"
+                    class="button button--active button-review"
+                  >
                     Submit Now
                   </button>
-                </div>
-              </form>
+                 </div>
+               </form>
             </div>
           </div>
         </div>
@@ -343,32 +312,6 @@
               </ul>
               <p>Outstanding</p>
               <form action="#/" class="form-contact form-review mt-3">
-                <div class="form-group">
-                  <input
-                    class="form-control"
-                    name="name"
-                    type="text"
-                    placeholder="Enter your name"
-                    required
-                  />
-                </div>
-                <div class="form-group">
-                  <input
-                    class="form-control"
-                    name="email"
-                    type="email"
-                    placeholder="Enter email address"
-                    required
-                  />
-                </div>
-                <div class="form-group">
-                  <input
-                    class="form-control"
-                    name="subject"
-                    type="text"
-                    placeholder="Enter Subject"
-                  />
-                </div>
                 <div class="form-group">
                   <textarea
                     class="form-control different-control w-100"
@@ -512,3 +455,25 @@
     </div>
   </div>
 </section>
+<script>
+
+function showReply(parentCommentId, name){
+  console.log({parentCommentId})
+  $('#btn-close-reply').show()
+  $("#reply").html("Reply to "+ name)
+  $('#parentCommentId').val(parentCommentId)
+}
+
+function closeReply(){
+  $("#reply").html()
+  $('#parentCommentId').val("")
+  $('#btn-close-reply').hide()
+
+}
+
+$(document).ready(()=>{
+   $('#btn-close-reply').hide()
+})
+
+
+</script>
