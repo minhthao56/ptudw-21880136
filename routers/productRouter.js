@@ -99,6 +99,18 @@ router.get("/:id", (req, res, next) => {
       }
 
       product.starts = starts.reverse();
+
+      const userId = req.session?.user?.id;
+
+      if (userId) {
+        return reviewController.getReviewByProductIdAndUserId({
+          productId: id,
+          userId: req.session.user.id,
+        });
+      }
+    })
+    .then((reviewUser) => {
+      product.reviewUser = reviewUser;
       res.locals.product = product;
       res.render("single-product", { banner: "Shop Single" });
     })

@@ -1,3 +1,6 @@
-.review_item .media .media-body .disabled, .product_description_area .tab-content .total_rate .rating_list .list li a .disabled{
+.review_item .media .media-body .disabled, 
+.product_description_area .tab-content .total_rate .rating_list .list li a .disabled, 
+.review_box .list li a.disabled{
     color: lightgray;
 }
+

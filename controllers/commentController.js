@@ -35,7 +35,7 @@ const controller = {
         parentCommentId,
       });
     } catch (error) {
-      return error;
+      throw new Error(error);
     }
   },
 };

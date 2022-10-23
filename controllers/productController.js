@@ -98,6 +98,19 @@ const controller = {
         .catch((error) => reject(new Error(error)));
     });
   },
+
+  updateOverallReviewProduct: async (id, overallReview, reviewCount) => {
+    try {
+      return await Product.update(
+        { overallReview, reviewCount },
+        {
+          where: { id },
+        }
+      );
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
 };
 
 module.exports = controller;

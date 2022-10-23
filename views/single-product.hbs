@@ -206,6 +206,7 @@
             </div>
           </div>
           <div class="col-lg-6">
+            {{#if ../isLoggedIn}}
             <div class="review_box">
               <h4>Post a comment</h4>
                 <form action="/comments" class="form-contact form-review mt-3" method="post">
@@ -235,6 +236,9 @@
                  </div>
                </form>
             </div>
+            {{else}}
+            <h4>Please login to comment <a href="/user/login?urlReturn=/products/{{id}}">Click to Login</a></h4>
+            {{/if}}
           </div>
         </div>
       </div>
@@ -290,37 +294,41 @@
             </div>
           </div>
           <div class="col-lg-6">
+            {{#if ../isLoggedIn}}
             <div class="review_box">
               <h4>Add a Review</h4>
               <p>Your Rating:</p>
-              <ul class="list">
+              <ul class="list start-list">
                 <li>
-                  <a href="#"><i class="fa fa-star"></i></a>
+                  <a><i class="fa fa-star"></i></a>
                 </li>
                 <li>
-                  <a href="#"><i class="fa fa-star"></i></a>
+                  <a><i class="fa fa-star"></i></a>
                 </li>
                 <li>
-                  <a href="#"><i class="fa fa-star"></i></a>
+                  <a><i class="fa fa-star"></i></a>
                 </li>
                 <li>
-                  <a href="#"><i class="fa fa-star"></i></a>
+                  <a><i class="fa fa-star"></i></a>
                 </li>
                 <li>
-                  <a href="#"><i class="fa fa-star"></i></a>
+                  <a><i class="fa fa-star"></i></a>
                 </li>
               </ul>
-              <p>Outstanding</p>
-              <form action="#/" class="form-contact form-review mt-3">
+              <p id="ratingName">Outstanding</p>
+              <form action="/reviews" class="form-contact form-review mt-3" method="post">
+              <input type="hidden" value="{{reviewUser.rating}}" name="rating" id="rating">
+              <input type="hidden" value="{{id}}" name="productIdReview">
                 <div class="form-group">
                   <textarea
                     class="form-control different-control w-100"
-                    name="textarea"
+                    name="message"
                     id="textarea"
                     cols="30"
                     rows="5"
                     placeholder="Enter Message"
-                  ></textarea>
+                    
+                  >{{reviewUser.message}}</textarea>
                 </div>
                 <div class="form-group text-center text-md-right mt-3">
                   <button
@@ -332,6 +340,9 @@
                 </div>
               </form>
             </div>
+            {{else}}
+            <h4>Please login to review <a href="/user/login?urlReturn=/products/{{id}}">Click to Login</a></h4>
+            {{/if}}
           </div>
         </div>
       </div>
@@ -458,7 +469,6 @@
 <script>
 
 function showReply(parentCommentId, name){
-  console.log({parentCommentId})
   $('#btn-close-reply').show()
   $("#reply").html("Reply to "+ name)
   $('#parentCommentId').val(parentCommentId)
@@ -470,9 +480,83 @@ function closeReply(){
   $('#btn-close-reply').hide()
 
 }
+const startNames = ["Worst", "Bad", "Good","Very Good", "Outstanding"]
 
+function clickStart(){
+  let rating;
+  const starts =  $(".review_box .list li a")
+
+ starts.each((index, element)=>{
+    if(element == this){
+      $('#rating').val(index + 1)
+      rating = index
+    }
+  })
+
+  starts.each((index, element)=>{
+   if(index > rating){
+      $(element).addClass("disabled")
+    }else{
+      $(element).removeClass("disabled")
+    }
+  })
+
+  $("#ratingName").html(startNames[rating])
+
+}
+
+function handleMouseOver(){
+  let rating;
+  const starts =  $(".review_box .list li a")
+
+  starts.each((index, element)=>{
+    if(element == this){
+      $('#rating').val(index + 1)
+      rating = index
+    }
+  })
+
+  starts.each((index, element)=>{
+   if(index > rating){
+      $(element).addClass("disabled")
+    }else{
+      $(element).removeClass("disabled")
+    }
+  })
+  $("#ratingName").html(startNames[rating])
+
+}
+
+function initialStart(){
+  const rating = $('#rating').val()
+  const starts =  $(".review_box .list li a")
+
+  if(rating){
+   const valRating = parseInt(rating) -1
+
+    starts.each((index, element)=>{
+      if(index > valRating){
+          $(element).addClass("disabled")
+        }else{
+          $(element).removeClass("disabled")
+        }
+      })
+
+   $("#ratingName").html(startNames[valRating])
+
+  }else{
+    $("#ratingName").html("Please starting this product !!!")
+    starts.each((index, element)=>{
+      $(element).addClass("disabled")
+    })
+  }
+}
+  
 $(document).ready(()=>{
-   $('#btn-close-reply').hide()
+  $('#btn-close-reply').hide()
+  $(".review_box .list li a").css('cursor', "pointer").on("click", clickStart).on("mouseover",handleMouseOver)
+  initialStart()
+
 })
 
 

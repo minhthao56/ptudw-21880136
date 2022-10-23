@@ -47,7 +47,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //expressSession
 app.use(
   expressSession({
-    cookie: { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 },
+    cookie: { httpOnly: true, maxAge: null },
     secret: "123123",
     resave: false,
     saveUninitialized: false,
@@ -61,6 +61,9 @@ app.use((req, res, next) => {
   const cart = new Cart(req.session.cart || {});
   req.session.cart = cart;
   res.locals.totalQuantity = cart.totalQuantity;
+  res.locals.fullname = req.session.user ? req.session.user.fullname : "";
+  res.locals.isLoggedIn = req.session.user ? true : false;
+
   next();
 });
 
@@ -71,6 +74,10 @@ app.use("/products", require("./routers/productRouter"));
 app.use("/cart", require("./routers/cartRouter"));
 
 app.use("/comments", require("./routers/commentRouter"));
+
+app.use("/reviews", require("./routers/reviewRouter"));
+
+app.use("/user", require("./routers/userRouter"));
 
 app.get("/sync", (req, res) => {
   const models = require("./models");
